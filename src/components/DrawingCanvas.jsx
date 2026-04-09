@@ -3,9 +3,10 @@ import { DrawingEngine } from '../modules/drawingEngine';
 import { StrokeManager } from '../modules/strokeManager';
 import { InteractionEngine } from '../modules/interactionEngine';
 import { TransformEngine } from '../modules/transformEngine';
+import { ShapeRecognizer } from '../modules/shapeRecognizer.js';
 
 const DrawingCanvas = forwardRef(({ 
-  settings, gesture, landmark,
+  settings, gesture, landmark, autoShape,
   controlGesture, controlLandmark, controlPinchDelta, controlAngleDelta
 }, ref) => {
   const canvasRef = useRef(null);
@@ -26,6 +27,7 @@ const DrawingCanvas = forwardRef(({
     undo: () => managerRef.current?.undo(),
     redo: () => managerRef.current?.redo(),
     save: () => engineRef.current?.saveAsImage(),
+    getCanvas: () => canvasRef.current,
   }));
 
   useEffect(() => {
@@ -69,8 +71,32 @@ const DrawingCanvas = forwardRef(({
 
   const saveCurrentPath = () => {
     if (currentPathRef.current) {
+      // Smooth points for better recognition
+      const smoothPoints = [];
+      const numPoints = currentPathRef.current.points.length;
+      for (let i = 0; i < numPoints; i += 2) {
+        smoothPoints.push(currentPathRef.current.points[i]);
+      }
+      let pointsToSave = smoothPoints.length > 4 ? smoothPoints : currentPathRef.current.points;
+      
+      // Auto-shape recognition
+      if (autoShape && pointsToSave.length >= 5) {
+        const recognizer = new ShapeRecognizer();
+        const result = recognizer.recognize(pointsToSave);
+        console.log('Shape recognition result:', {
+          detected: result.detected,
+          type: result.type,
+          pointsCount: pointsToSave.length,
+          perfectPointsCount: result.perfectPoints?.length
+        });
+        if (result.detected) {
+          pointsToSave = result.perfectPoints;
+          console.log('Applied perfect shape:', result.type);
+        }
+      }
+      
       managerRef.current.addStroke(
-        currentPathRef.current.points,
+        pointsToSave,
         currentPathRef.current.color,
         currentPathRef.current.lineWidth,
         currentPathRef.current.glowIntensity
@@ -120,7 +146,7 @@ const DrawingCanvas = forwardRef(({
         saveCurrentPath();
         break;
     }
-  }, [gesture, landmark, settings]);
+  }, [gesture, landmark, settings, autoShape]);
 
   // === SECONDARY HAND: Control gestures (move/scale/rotate) ===
   useEffect(() => {

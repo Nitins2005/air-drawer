@@ -20,6 +20,18 @@ const gestures = [
     ],
   },
   {
+    section: '🎙️ Voice Commands (click mic to start)',
+    items: [
+      { emoji: '↩️', gesture: '"Undo" / "Redo"', action: 'Undo or redo last action' },
+      { emoji: '🗑️', gesture: '"Clear" / "Erase all"', action: 'Clear the entire canvas' },
+      { emoji: '💾', gesture: '"Save" / "Download"', action: 'Save drawing as PNG' },
+      { emoji: '🎨', gesture: '"Red" "Blue" "Cyan" etc.', action: 'Change brush color' },
+      { emoji: '📏', gesture: '"Bigger" / "Smaller"', action: 'Adjust brush thickness' },
+      { emoji: '📷', gesture: '"Camera"', action: 'Toggle camera view' },
+      { emoji: '🤚', gesture: '"Gestures on/off"', action: 'Toggle hand gestures' },
+    ],
+  },
+  {
     section: 'Tips',
     items: [
       { emoji: '💡', gesture: 'One hand only', action: 'Auto-assigned as draw hand' },
