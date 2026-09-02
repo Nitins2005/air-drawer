@@ -15,7 +15,15 @@ Draw in the air with your dominant hand and manipulate your creations in real-ti
 *   **🌀 Physics-Based Interaction**: Smooth inertia on stroke movement and snap-to-angle (45°) for rotation.
 *   **📖 Gesture Guide**: Built-in interactive manual explaining every movement.
 
-## 🛠️ Tech Stack
+## � Quick Start Guide
+
+Welcome! Get started with Air Draw in minutes.
+
+1. Install dependencies: `npm install`
+2. Run the development server: `npm run dev`
+3. Open your browser and start drawing!
+
+## �🛠️ Tech Stack
 
 *   **Frontend**: React + Vite
 *   **Hand Tracking**: @mediapipe/hands
